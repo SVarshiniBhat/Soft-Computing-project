@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 320px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            transition: 0.3s;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+        }
+
+        .google {
+            background: #db4437;
+        }
+
+        .google:hover {
+            background: #c1351d;
+        }
+
+        a {
+            text-decoration: none;
+            color: #667eea;
+        }
+
+        .small {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>Login</h2>
+
+    {% if message %}
+        <p style="color:red; text-align:center;">
+            {{ message }}
+        </p>
+    {% endif %}
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Enter Username"
+            required
+        ><br>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            required
+        ><br>
+
+        <button type="submit" class="btn">
+            Login
+        </button>
+
+    </form>
+
+    <button class="btn google">
+        Login with Google
+    </button>
+
+    <div class="small">
+        Don't have an account?
+        <a href="/register">Register</a>
+    </div>
+
+</div>
+
+</body>
+</html>

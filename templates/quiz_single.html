@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h3 {
+            margin-bottom: 20px;
+        }
+
+        .option {
+            margin: 10px 0;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            background: #ff758c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #e85c75;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h3>{{ question.question }}</h3>
+
+    <form method="post" action="/quiz/{{ qno + 1 }}">
+        {% for opt in question.options %}
+            <div class="option">
+                <input type="radio" name="answer" value="{{ opt }}" required>
+                {{ opt }}
+            </div>
+        {% endfor %}
+
+        <button class="btn">Next</button>
+    </form>
+</div>
+
+</body>
+</html>

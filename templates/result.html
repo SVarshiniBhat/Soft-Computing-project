@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .score {
+            font-size: 28px;
+            margin: 10px 0;
+            color: #667eea;
+        }
+
+        .level {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .ai-box {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Quiz Result</h2>
+
+    <div class="score">
+    Score: {{ score }} / {{ total_questions }}
+</div>
+
+<div class="score">
+    Percentage: {{ percentage }}%
+</div>
+    <div class="level">Level: {{ level }}</div>
+
+    <h3>AI Feedback</h3>
+    
+    <div class="ai-box">
+        <pre>{{ ai_output }}</pre>
+    </div>
+
+    <a href="/review">
+    <button class="btn">
+        Review Answers
+    </button>
+</a>
+
+    <form action="/practice">
+    <button class="btn">Practice with AI</button>
+</form>
+
+    <a href="/setup"><button class="btn">Go Home</button></a>
+
+    <p><b>This system adapts learning using AI based on your performance.</b></p>
+</div>
+
+</body>
+</html>

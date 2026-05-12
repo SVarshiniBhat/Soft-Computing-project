@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Answer Review</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial;
+            background:linear-gradient(to right,#667eea,#764ba2);
+            padding:40px;
+        }
+
+        .card{
+            width:70%;
+            margin:auto;
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:30px;
+            color:#222;
+        }
+
+        .question-box{
+            background:#f4f4f4;
+            padding:25px;
+            border-radius:12px;
+            margin-bottom:25px;
+        }
+
+        .question{
+            font-weight:bold;
+            font-size:24px;
+            color:#222;
+            margin-bottom:25px;
+            line-height:1.5;
+        }
+
+        .your-label{
+            font-size:18px;
+            font-weight:bold;
+            color:#555;
+            margin-top:15px;
+        }
+
+        .correct-label{
+            font-size:18px;
+            font-weight:bold;
+            color:#2e7d32;
+            margin-top:15px;
+        }
+
+        .your-answer{
+            font-size:20px;
+            font-weight:normal;
+            color:black;
+            margin-top:8px;
+        }
+
+        .correct-answer{
+            font-size:20px;
+            font-weight:bold;
+            color:#2e7d32;
+            margin-top:8px;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:20px;
+            padding:12px 22px;
+            background:#667eea;
+            color:white;
+            text-decoration:none;
+            border-radius:8px;
+            font-weight:bold;
+        }
+
+        .btn:hover{
+            background:#5a67d8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>Answer Review</h1>
+
+    {% for item in review_data %}
+
+        <div class="question-box">
+
+            <div class="question">
+                {{ item.question }}
+            </div>
+
+            <div class="your-label">
+                Your Answer
+            </div>
+
+            <div class="your-answer">
+                {{ item.selected }}
+            </div>
+
+            <div class="correct-label">
+                Correct Answer
+            </div>
+
+            <div class="correct-answer">
+                {{ item.correct }}
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+    <a href="/result" class="btn">
+        Back
+    </a>
+
+</div>
+
+</body>
+</html>

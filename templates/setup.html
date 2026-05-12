@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Dashboard</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(to right, #43cea2, #185a9d);
+            min-height: 100vh;
+            padding: 100px 40px 40px 40px;
+        }
+
+        .top-bar{
+            position:absolute;
+            top:20px;
+            left:40px;
+            right:40px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .welcome{
+            color:white;
+            font-size:30px;
+            font-weight:bold;
+        }
+
+        .logout-btn{
+            background:white;
+            color:#185a9d;
+            border:none;
+            padding:10px 18px;
+            border-radius:8px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        .dashboard{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:25px;
+            width:100%;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color:#222;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size:15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #43cea2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size:16px;
+            font-weight:bold;
+        }
+
+        .btn:hover {
+            background: #36b892;
+        }
+
+        .option-group {
+            margin-top: 10px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight:bold;
+            color:#444;
+        }
+
+        .analytics-box{
+            height:220px;
+            background:#f4f4f4;
+            border-radius:12px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:#777;
+            margin-top:15px;
+            margin-bottom:20px;
+            font-size:18px;
+        }
+
+        .insight{
+            background:#f4f4f4;
+            padding:14px;
+            border-radius:10px;
+            margin-top:12px;
+            color:#333;
+        }
+
+        .filter-select{
+            margin-bottom:15px;
+        }
+
+        .practice-text{
+            color:#555;
+            line-height:1.7;
+            margin-top:15px;
+            font-size:16px;
+        }
+
+        .chart-container{
+            margin-top:20px;
+        }
+
+        .chart-label{
+            font-weight:bold;
+            margin-bottom:12px;
+            color:#333;
+        }
+
+        .chart-bar-bg{
+            width:100%;
+            height:35px;
+            background:#e5e5e5;
+            border-radius:30px;
+            overflow:hidden;
+        }
+
+        .chart-bar-fill{
+            height:100%;
+            background:#43cea2;
+            color:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:bold;
+        }
+
+        @media(max-width:900px){
+
+            .dashboard{
+                grid-template-columns:1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="top-bar">
+
+    <div class="welcome">
+        Welcome {{ session.username }}
+    </div>
+
+    <a href="/">
+        <button class="logout-btn">
+            Logout
+        </button>
+    </a>
+
+</div>
+
+<div class="dashboard">
+
+    <div class="card">
+
+        <h2>Setup Your Quiz</h2>
+
+        <form action="/quiz/0" method="get">
+
+            <label>Domain</label>
+
+            <select name="domain" id="domain" onchange="updateFields()" required>
+
+                <option value="">Select</option>
+
+                <option value="Programming">Programming</option>
+
+                <option value="Data Science">Data Science</option>
+
+                <option value="Machine Learning">Machine Learning</option>
+
+                <option value="UI/UX">UI/UX</option>
+
+            </select>
+
+            <div id="extraFields"></div>
+
+            <label>Difficulty Level</label>
+
+            <select name="level" required>
+
+                <option>Beginner</option>
+
+                <option>Intermediate</option>
+
+                <option>Advanced</option>
+
+            </select>
+
+            <div class="option-group">
+
+                <label>
+                    <input type="checkbox">
+                    Show answers after quiz
+                </label>
+
+            </div>
+
+            <div class="option-group">
+
+                <label>
+                    <input type="checkbox">
+                    Enable Timer (5 mins)
+                </label>
+
+            </div>
+
+            <button type="submit" class="btn">
+                Start Quiz
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+    <h2>Performance Analytics</h2>
+
+    <select class="filter-select">
+
+        <option>Analyze by Domain</option>
+
+        <option>Analyze by Language</option>
+
+        <option>Analyze by Concept</option>
+
+    </select>
+
+    {% if session.get("chart_scores") %}
+
+    <canvas id="performanceChart"></canvas>
+
+    <div class="insight">
+        <b>Strong Area:</b>
+        {{ session.get("strong_area", "Not Available") }}
+    </div>
+
+    <div class="insight">
+        <b>Weak Area:</b>
+        {{ session.get("weak_area", "Not Available") }}
+    </div>
+
+    <div class="insight">
+        <b>Current Level:</b>
+        {{ session.get("current_level", "Not Available") }}
+    </div>
+
+    {% else %}
+
+    <div class="analytics-box">
+        Complete a quiz to view analytics
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+    <div class="card">
+
+        <h2>AI Practice Zone</h2>
+
+        <div class="practice-text">
+
+            Practice unlimited AI-generated questions
+            tailored to your learning needs.
+
+        </div>
+
+        <a href="/practice">
+
+            <button class="btn">
+                Practice with AI
+            </button>
+
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+
+function updateFields() {
+
+    let domain = document.getElementById("domain").value;
+
+    let extra = document.getElementById("extraFields");
+
+    let html = "";
+
+    if (domain === "Programming") {
+
+        html = `
+
+            <label>Language</label>
+
+            <select name="language" required>
+
+                <option value="Python">Python</option>
+
+                <option value="Java">Java</option>
+
+            </select>
+
+            <label>Concept</label>
+
+            <select name="concept" required>
+
+                <option value="Variables">Variables</option>
+
+                <option value="Loops">Loops</option>
+
+                <option value="Functions">Functions</option>
+
+                <option value="OOP">OOP</option>
+
+                <option value="Data Structures">Data Structures</option>
+
+            </select>
+
+        `;
+    }
+
+    else if (domain === "Machine Learning") {
+
+        html = `
+
+            <label>Concept</label>
+
+            <select name="concept" required>
+
+                <option value="Linear Regression">Linear Regression</option>
+
+                <option value="Decision Trees">Decision Trees</option>
+
+                <option value="KNN">KNN</option>
+
+                <option value="Backpropagation">Backpropagation</option>
+
+                <option value="Clustering">Clustering</option>
+
+            </select>
+
+        `;
+    }
+
+    else if (domain === "Data Science") {
+
+        html = `
+
+            <label>Concept</label>
+
+            <select name="concept" required>
+
+                <option value="Pandas">Pandas</option>
+
+                <option value="Data Cleaning">Data Cleaning</option>
+
+                <option value="Visualization">Visualization</option>
+
+                <option value="Statistics">Statistics</option>
+
+            </select>
+
+        `;
+    }
+
+    else if (domain === "UI/UX") {
+
+        html = `
+
+            <label>Concept</label>
+
+            <select name="concept" required>
+
+                <option value="Design Principles">Design Principles</option>
+
+                <option value="Wireframing">Wireframing</option>
+
+                <option value="UX Research">UX Research</option>
+
+                <option value="Usability Testing">Usability Testing</option>
+
+            </select>
+
+        `;
+    }
+
+    extra.innerHTML = html;
+}
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if session.get("chart_scores") %}
+
+<script>
+
+const chartLabels = JSON.parse('{{ session.get("chart_labels", []) | tojson | safe }}');
+
+const chartScores = JSON.parse('{{ session.get("chart_scores", []) | tojson | safe }}');
+
+const ctx = document.getElementById("performanceChart");
+
+new Chart(ctx, {
+
+    type: "line",
+
+    data: {
+
+        labels: chartLabels,
+
+        datasets: [{
+
+            label: "Quiz Scores",
+
+            data: chartScores,
+
+            borderWidth: 3,
+
+            tension: 0.3
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                max: 100
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endif %}
+</script>
+</body>
+</html>

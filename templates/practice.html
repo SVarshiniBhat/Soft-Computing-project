@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Practice</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial;
+            background:linear-gradient(to right,#667eea,#764ba2);
+            min-height:100vh;
+            padding:40px;
+        }
+
+        .card{
+            width:85%;
+            margin:auto;
+            background:white;
+            padding:35px;
+            border-radius:20px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:35px;
+            color:#222;
+        }
+
+        .practice-form{
+            display:flex;
+            gap:15px;
+            align-items:end;
+            flex-wrap:wrap;
+            margin-bottom:35px;
+        }
+
+        .field-group{
+            display:flex;
+            flex-direction:column;
+            min-width:180px;
+        }
+
+        .field-group label{
+            margin-bottom:8px;
+            font-weight:bold;
+            color:#444;
+        }
+
+        select{
+            padding:12px;
+            border-radius:10px;
+            border:1px solid #ccc;
+            font-size:15px;
+        }
+
+        .question{
+            font-size:26px;
+            font-weight:bold;
+            margin-bottom:25px;
+            color:#333;
+        }
+
+        .option{
+            display:block;
+            background:#f4f4f4;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:15px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .option:hover{
+            background:#e8e8e8;
+        }
+
+        input[type="radio"]{
+            margin-right:10px;
+        }
+
+        .submit-btn{
+            width:100%;
+            padding:14px;
+            background:#667eea;
+            color:white;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:16px;
+            margin-top:15px;
+        }
+
+        .submit-btn:hover{
+            background:#5a67d8;
+        }
+
+        .feedback{
+            margin-top:25px;
+            padding:18px;
+            border-radius:10px;
+            font-size:18px;
+            font-weight:bold;
+        }
+
+        .correct{
+            background:#d4edda;
+            color:#155724;
+        }
+
+        .wrong{
+            background:#f8d7da;
+            color:#721c24;
+        }
+
+        .explanation{
+            margin-top:15px;
+            background:#f4f4f4;
+            padding:15px;
+            border-radius:10px;
+            line-height:1.6;
+        }
+
+        .btn-group{
+            margin-top:25px;
+            display:flex;
+            gap:15px;
+        }
+
+        .btn{
+            flex:1;
+            text-align:center;
+            padding:14px;
+            background:#667eea;
+            color:white;
+            text-decoration:none;
+            border-radius:10px;
+        }
+
+        .btn:hover{
+            background:#5a67d8;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>AI Practice</h1>
+
+    <!-- FILTERS -->
+    <form method="GET" class="practice-form" id="practiceForm">
+
+        <input type="hidden" name="start_practice" value="1">
+
+        <!-- DOMAIN -->
+        <div class="field-group">
+
+            <label>Domain</label>
+
+            <select
+                name="domain"
+                id="domain"
+            >
+
+                <option value="Programming"
+                {% if session.practice_domain == "Programming" %}
+                selected
+                {% endif %}
+                >
+                Programming
+                </option>
+
+                <option value="Data Science"
+                {% if session.practice_domain == "Data Science" %}
+                selected
+                {% endif %}
+                >
+                Data Science
+                </option>
+
+                <option value="Machine Learning"
+                {% if session.practice_domain == "Machine Learning" %}
+                selected
+                {% endif %}
+                >
+                Machine Learning
+                </option>
+
+                <option value="UI/UX"
+                {% if session.practice_domain == "UI/UX" %}
+                selected
+                {% endif %}
+                >
+                UI/UX
+                </option>
+
+            </select>
+
+        </div>
+
+        <!-- DYNAMIC FIELDS -->
+        <div id="extraFields"></div>
+
+    </form>
+
+    {% if question %}
+
+    <div class="question">
+        {{ question.question }}
+    </div>
+
+    {% if not show_result %}
+
+    <form method="POST">
+
+        {% for option in question.options %}
+
+            <label class="option">
+
+                <input
+                    type="radio"
+                    name="selected_answer"
+                    value="{{ option[0] }}"
+                    required
+                >
+
+                {{ option }}
+
+            </label>
+
+        {% endfor %}
+
+        <button type="submit" class="submit-btn">
+            Submit Answer
+        </button>
+
+    </form>
+
+    {% endif %}
+
+    {% if show_result %}
+
+        <div class="feedback {% if 'Correct' in feedback %}correct{% else %}wrong{% endif %}">
+            {{ feedback }}
+        </div>
+
+        <div class="explanation">
+            <b>Explanation:</b><br><br>
+            {{ explanation }}
+        </div>
+
+        <div class="btn-group">
+
+            <a href="/practice?start_practice=1" class="btn">
+                Next Question
+            </a>
+
+            <a href="/setup" class="btn">
+                End Practice
+            </a>
+
+        </div>
+
+    {% endif %}
+
+    {% endif %}
+
+</div>
+
+<script>
+
+function updateFields() {
+
+    let domain = document.getElementById("domain").value;
+
+    let extra = document.getElementById("extraFields");
+
+    let html = "";
+
+    // PROGRAMMING
+    if(domain === "Programming"){
+
+    let selectedLanguage =
+        "{{ session.practice_language or 'Python' }}";
+
+    let selectedConcept =
+        "{{ session.practice_concept or 'Loops' }}";
+
+    html = `
+
+    <div class="field-group">
+
+        <label>Language</label>
+
+        <select name="language" id="language">
+
+            <option value="Python"
+            ${selectedLanguage === "Python" ? "selected" : ""}
+            >
+            Python
+            </option>
+
+            <option value="Java"
+            ${selectedLanguage === "Java" ? "selected" : ""}
+            >
+            Java
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="field-group">
+
+        <label>Concept</label>
+
+        <select name="concept" id="concept">
+
+            <option value="Loops"
+            ${selectedConcept === "Loops" ? "selected" : ""}
+            >
+            Loops
+            </option>
+
+            <option value="Functions"
+            ${selectedConcept === "Functions" ? "selected" : ""}
+            >
+            Functions
+            </option>
+
+            <option value="OOP"
+            ${selectedConcept === "OOP" ? "selected" : ""}
+            >
+            OOP
+            </option>
+
+            <option value="Data Structures"
+            ${selectedConcept === "Data Structures" ? "selected" : ""}
+            >
+            Data Structures
+            </option>
+
+        </select>
+
+    </div>
+
+    `;
+
+}
+    // DATA SCIENCE
+    else if(domain === "Data Science"){
+
+        html = `
+
+        <div class="field-group">
+
+            <label>Concept</label>
+
+            <select name="concept" id="concept">
+
+                <option value="Pandas">Pandas</option>
+
+                <option value="NumPy">NumPy</option>
+
+                <option value="Data Cleaning">Data Cleaning</option>
+
+                <option value="Visualization">Visualization</option>
+
+            </select>
+
+        </div>
+
+        `;
+
+    }
+
+    // MACHINE LEARNING
+    else if(domain === "Machine Learning"){
+
+        html = `
+
+        <div class="field-group">
+
+            <label>Concept</label>
+
+            <select name="concept" id="concept">
+
+                <option value="Regression">Regression</option>
+
+                <option value="KNN">KNN</option>
+
+                <option value="Decision Trees">Decision Trees</option>
+
+            </select>
+
+        </div>
+
+        `;
+
+    }
+
+    // UI UX
+    else if(domain === "UI/UX"){
+
+        html = `
+
+        <div class="field-group">
+
+            <label>Concept</label>
+
+            <select name="concept" id="concept">
+
+                <option value="Wireframing">Wireframing</option>
+
+                <option value="UX Research">UX Research</option>
+
+                <option value="Design Principles">Design Principles</option>
+
+            </select>
+
+        </div>
+
+        `;
+
+    }
+
+    extra.innerHTML = html;
+
+}
+
+
+// INITIAL LOAD
+updateFields();
+
+
+// DOMAIN CHANGE
+document.getElementById("domain")
+.addEventListener("change", function(){
+
+    updateFields();
+
+    setTimeout(() => {
+
+        document.getElementById(
+            "practiceForm"
+        ).submit();
+
+    }, 100);
+
+});
+
+
+// LANGUAGE / CONCEPT CHANGE
+document.addEventListener("change", function(e){
+
+    if(
+        e.target.id === "language" ||
+        e.target.id === "concept"
+    ){
+
+        document.getElementById(
+            "practiceForm"
+        ).submit();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
